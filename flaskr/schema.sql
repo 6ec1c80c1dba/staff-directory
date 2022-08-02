@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS staff_member;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,10 +7,13 @@ CREATE TABLE user (
   password TEXT NOT NULL
 );
 
-CREATE TABLE staff (
+CREATE TABLE staff_member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  staff_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
   full_name TEXT NOT NULL,
+  preferred TEXT NOT NULL,
   job_role TEXT NOT NULL,
   email TEXT NOT NULL,
-  FOREIGN KEY (full_name) REFERENCES staff (id)
+  FOREIGN KEY (staff_id) REFERENCES staff_member (id)
 );

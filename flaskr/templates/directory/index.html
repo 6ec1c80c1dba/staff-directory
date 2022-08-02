@@ -1,0 +1,26 @@
+{% block header %}
+  <h1>{% block title %}Directory{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('directory.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for staff_member in staff_members %}
+    <article class="staff_member">
+      <header>
+        <div>
+          <h1>{{ staff_member['title'] }}</h1>
+          <div class="login_details">by {{ staff_member['username'] }} on {{ staff_member['staff_id'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == staff_member['staff_id'] %}
+          <a class="action" href="{{ url_for('directory.update', id=staff_member['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="preferred">{{ staff_member['preferred'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
