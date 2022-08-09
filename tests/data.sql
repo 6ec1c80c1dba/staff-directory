@@ -5,4 +5,4 @@ VALUES
 
 INSERT INTO staff_member (staff_id, title, full_name, preferred, job_role)
 VALUES
-  (23, "miss", "Jane Doe", 'Janie', 'admin');
+  (1, "Mr", "Johnathon Doe", 'John', 'Human Resources Manager');

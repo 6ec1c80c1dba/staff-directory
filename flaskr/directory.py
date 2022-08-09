@@ -50,8 +50,8 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO staff_member (title, preferred, staff_id)'
-                ' VALUES (?, ?, ?)',
+                'INSERT INTO staff_member (title, preferred, staff_id, job_role)'
+                ' VALUES (?, ?, ?, ?)',
                 (title, preferred, g.user['id'])
             )
             db.commit()
