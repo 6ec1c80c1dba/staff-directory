@@ -50,7 +50,7 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, preferred, staff_id)'
+                'INSERT INTO staff_member (title, preferred, staff_id)'
                 ' VALUES (?, ?, ?)',
                 (title, preferred, g.user['id'])
             )
@@ -77,7 +77,7 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, preferred = ?'
+                'UPDATE staff_member SET title = ?, preferred = ?'
                 ' WHERE id = ?',
                 (title, preferred, id)
             )

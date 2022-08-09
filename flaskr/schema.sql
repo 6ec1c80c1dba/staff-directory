@@ -11,9 +11,9 @@ CREATE TABLE staff_member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   staff_id INTEGER NOT NULL,
   title TEXT NOT NULL,
-  full_name TEXT NOT NULL,
+  full_name TEXT ,
   preferred TEXT NOT NULL,
   job_role TEXT NOT NULL,
-  email TEXT NOT NULL,
+  email TEXT,
   FOREIGN KEY (staff_id) REFERENCES staff_member (id)
 );
