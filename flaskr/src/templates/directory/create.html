@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Staff Member{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Title</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    <label for="full_name">Full Name</label>
+    <input name="full_name" id="full_name" value="{{ request.form['full_name'] }}" required>
+    <label for="preferred">Preferred</label>
+    <input name="preferred" id="preferred" value="{{ request.form['preferred'] }}" required>
+    <label for="job_role">Job Role</label>
+    <input name="job_role" id="job_role" value="{{ request.form['job_role'] }}" required>
+    <label for="email">Email Address</label>
+    <input name="email" id="email" value="{{ request.form['email'] }}" required>
+    <label for="system_administrator"> System Administrator </label>
+    <select name="system_administrator" id="system_administrator">
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}
