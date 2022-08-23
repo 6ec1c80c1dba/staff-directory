@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from flaskr.src.auth import login_required
-from flaskr.src.db import get_db
+from flaskr.auth import login_required
+from flaskr.db import get_db
 
 bp = Blueprint('directory', __name__)
 
@@ -12,16 +12,16 @@ bp = Blueprint('directory', __name__)
 def index():
     db = get_db()
     staff_member = db.execute(
-        'SELECT p.id, staff_id, title, full_name, preferred, job_role, email, username'
-        ' FROM staff_member p JOIN user u ON p.staff_id = u.id'
+        'SELECT p.id, title, full_name, preferred, job_role, email, username'
+        ' FROM staff_member p JOIN user u ON p.id = u.id'
         ' ORDER BY staff_id DESC'
     ).fetchall()
     return render_template('directory/index.html', staff_member=staff_member)
 
 def get_staff_member(id, check_staff_member=True):
     staff_member = get_db().execute(
-        'SELECT p.id, staff_id, title, full_name, preferred, job_role, email, username'
-        ' FROM staff_member p JOIN user u ON p.staff_id = u.id'
+        'SELECT p.id, title, full_name, preferred, job_role, email, username'
+        ' FROM staff_member p JOIN user u ON p.id = u.id'
         ' WHERE p.id = ?',
         (id,)
     ).fetchone()
@@ -29,7 +29,7 @@ def get_staff_member(id, check_staff_member=True):
     if staff_member is None:
         abort(404, f"Staff id {id} doesn't exist.")
 
-    if staff_member and staff_member['staff_id'] != g.user['id']:
+    if staff_member and staff_member['id'] != g.user['id']:
         abort(403)
 
     return staff_member
@@ -39,7 +39,11 @@ def get_staff_member(id, check_staff_member=True):
 def create():
     if request.method == 'POST':
         title = request.form['title']
+        full_name = request.form['full_name']
         preferred = request.form['preferred']
+        job_role = request.form['job_role']
+        email = request.form['email']
+        system_administrator = request.form['system_administrator']
         error = None
 
         if not title:
@@ -50,9 +54,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO staff_member (title, preferred, staff_id, job_role)'
+                'INSERT INTO staff_member (title, full_name, preferred, job_role, email, system_administrator)'
                 ' VALUES (?, ?, ?, ?)',
-                (title, preferred, g.user['id'])
+                (title, full_name, preferred, job_role, email, system_administrator)
             )
             db.commit()
             return redirect(url_for('directory.index'))
