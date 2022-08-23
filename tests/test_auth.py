@@ -1,6 +1,6 @@
 import pytest
 from flask import g, session
-from flaskr.src.db import get_db
+from flaskr.db import get_db
 
 
 def test_logout(client, auth):
