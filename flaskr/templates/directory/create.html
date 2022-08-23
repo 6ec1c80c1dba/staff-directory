@@ -8,8 +8,10 @@
   <form method="post">
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="full_name">Full Name</label>
-    <input name="full_name" id="full_name" value="{{ request.form['full_name'] }}" required>
+    <label for="first_name">First Name</label>
+    <input name="first_name" id="first_name" value="{{ request.form['first_name'] }}" required>
+    <label for="last_name">Last Name</label>
+    <input name="last_name" id="last_name" value="{{ request.form['last_name'] }}" required>
     <label for="preferred">Preferred</label>
     <input name="preferred" id="preferred" value="{{ request.form['preferred'] }}" required>
     <label for="job_role">Job Role</label>
@@ -20,6 +22,12 @@
     <select name="system_administrator" id="system_administrator">
       <option value="0">No</option>
       <option value="1">Yes</option>
+    </select>
+    <label for="department_id"> Department </label>
+    <select name="department_id" id="department_id">
+      <option value="1">Advertising</option>
+      <option value="2">Recruitment</option>
+      <option value="3">Marketing</option>
     </select>
     <input type="submit" value="Save">
   </form>

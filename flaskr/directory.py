@@ -11,18 +11,25 @@ bp = Blueprint('directory', __name__)
 @bp.route('/')
 def index():
     db = get_db()
-    staff_member = db.execute(
-        'SELECT p.id, title, full_name, preferred, job_role, email, username'
-        ' FROM staff_member p JOIN user u ON p.id = u.id'
-        ' ORDER BY staff_id DESC'
+    staff_members = db.execute(
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, department_id, extension_number, username'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' ORDER BY s.id DESC'
     ).fetchall()
-    return render_template('directory/index.html', staff_member=staff_member)
+    # department = get_db().execute(
+    #     'SELECT d.id, department_name, location_id'
+    #     ' FROM department d JOIN staff_member s ON d.id = s.department_id'
+    #     ' WHERE d.id = ?',
+    #         (id,)
+    # ).fetchone()
+    # Must add department to render template when functional
+    return render_template('directory/index.html', staff_members=staff_members)
 
 def get_staff_member(id, check_staff_member=True):
     staff_member = get_db().execute(
-        'SELECT p.id, title, full_name, preferred, job_role, email, username'
-        ' FROM staff_member p JOIN user u ON p.id = u.id'
-        ' WHERE p.id = ?',
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, username'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' WHERE s.id = ?',
         (id,)
     ).fetchone()
 
@@ -39,11 +46,14 @@ def get_staff_member(id, check_staff_member=True):
 def create():
     if request.method == 'POST':
         title = request.form['title']
-        full_name = request.form['full_name']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
         preferred = request.form['preferred']
         job_role = request.form['job_role']
         email = request.form['email']
+        extension_number = request.form['extension_number']
         system_administrator = request.form['system_administrator']
+        department_id = request.form['department_id']
         error = None
 
         if not title:
@@ -54,9 +64,14 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO staff_member (title, full_name, preferred, job_role, email, system_administrator)'
-                ' VALUES (?, ?, ?, ?)',
-                (title, full_name, preferred, job_role, email, system_administrator)
+                'INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)'
+                ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)
+            )
+            db.execute(
+                'INSERT INTO user (username)'
+                ' VALUES (?)',
+                (email)
             )
             db.commit()
             return redirect(url_for('directory.index'))
