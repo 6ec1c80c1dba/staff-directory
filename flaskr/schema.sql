@@ -8,9 +8,10 @@ CREATE TABLE user (
   username TEXT NOT NULL,
   password TEXT NOT NULL, 
   staff_id INTEGER NOT NULL,
+  is_admin INTEGER NOT NULL,
   FOREIGN KEY (username) references staff_member (email),
-  FOREIGN KEY (staff_id) references staff_member (id)
-
+  FOREIGN KEY (staff_id) references staff_member (id),
+  FOREIGN KEY (is_admin) references staff_member (system_administrator)
 );
 
 CREATE TABLE staff_member (
@@ -63,10 +64,10 @@ VALUES
   ("Mr", "Anthony", "Sharp", 'Tony', 'Advertising Manager', 'anthonysharp@mediacentral.com', 92945, 0, 1),
   ("Miss", "Jasmin", "Powers", 'Jaz', 'Marketing Executive', 'jasminpowers@mediacentral.com', 66805, 0, 2);
 
-INSERT INTO user (username, password, staff_id)
+INSERT INTO user (username, password, staff_id, is_admin)
 VALUES
-('johnathondove@mediacentral.com', 'pbkdf2:sha256:260000$kMxVGRScwnEoIk56$61640923b0263139b8eb5de565821acc246118e1a83de8b5dcbe090981bc855f', 1),
-('jasminpowers@mediacentral.com', 'pbkdf2:sha256:260000$77PnPmh45Crq3Tae$6aee84ddccfea4ec54df803b632256cd3dab60670eb717a7c3f814ebbd367573', 6);
+('johnathondove@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 1, 1),
+('jasminpowers@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 6, 0);
 
 
 

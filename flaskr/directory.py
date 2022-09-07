@@ -1,12 +1,15 @@
+from logging import exception
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
-
+from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint('directory', __name__)
+
+ 
 
 @bp.route('/')
 def index():
@@ -25,12 +28,12 @@ def index():
     # Must add department to render template when functional
     return render_template('directory/index.html', staff_members=staff_members)
 
-def get_staff_member(id, check_staff_member=True):
+def get_staff_member(staff_id, check_staff_member=True):
     staff_member = get_db().execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, username'
         ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
         ' WHERE s.id = ?',
-        (id,)
+        (staff_id,)
     ).fetchone()
 
     if staff_member is None:
@@ -68,21 +71,15 @@ def create():
                 ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
                 (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)
             )
-            db.execute(
-                'INSERT INTO user (username)'
-                ' VALUES (?)',
-                (email)
-            )
             db.commit()
             return redirect(url_for('directory.index'))
 
     return render_template('directory/create.html')
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/update/', methods=('GET', 'POST'))
 @login_required
 def update(id):
     staff_member = get_staff_member(id)
-
     if request.method == 'POST':
         title = request.form['title']
         preferred = request.form['preferred']
@@ -102,10 +99,59 @@ def update(id):
             )
             db.commit()
             return redirect(url_for('directory.index'))
+    return render_template('directory/update.html', staff_member = staff_member)
+
+
+@bp.route('/<int:id>/change_password', methods=('GET', 'POST'))
+@login_required
+def change_password(id):
+    staff_member = get_staff_member(id)
+    if request.method == 'POST':
+        password = request.form['password']
+        error = None
+        user = db.execute(
+            'SELECT * FROM user WHERE username = ?', (staff_member['email'], )
+        ).fetchone()
+        if not password:
+            error = 'Please fill in the box below with your new password.'
+        if check_password_hash(user['password'], generate_password_hash(password)):
+            error = "This password has been used previously"
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'UPDATE user SET password = ?'
+                ' WHERE staff_id = ?',
+                (generate_password_hash(password), id,)
+            )
+            db.commit()
+            return redirect(url_for('directory.index'))
+    return render_template('directory/change_password.html', staff_member = staff_member)
+
+@bp.route('/delete', methods=('GET', 'POST'))
+@login_required
+def delete():
+    if request.method == 'POST':
+        username = request.form['username']
+        error = None
+
+        if not username:
+            error = 'Username is required to find user.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute('DELETE FROM staff_member WHERE email = ?', (username,))
+            db.commit()
+            return redirect(url_for('directory.index'))
+            
+    return render_template('directory/delete.html')
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
-def delete(id):
+def delete_user(id):
     get_staff_member(id)
     db = get_db()
     db.execute('DELETE FROM staff_member WHERE id = ?', (id,))

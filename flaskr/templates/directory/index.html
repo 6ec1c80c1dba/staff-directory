@@ -4,8 +4,14 @@
   {% if g.user %}
     <h1>{% block title %} Staff Directory {% endblock %}</h1>
     {% if staff_members %}
-    <a class="action" href="{{ url_for('directory.create') }}">Add New User</a>
+      {% if g.user['is_admin'] == 1 %}
+      <a class="action" href="{{ url_for('directory.create') }}">Add New User</a>
+      <a class="action" href="{{ url_for('directory.delete') }}">Delete User</a>
+      {% endif %}
+      <a class="action" href="{{ url_for('directory.update',  id=g.user['staff_id']) }}">Update my details</a>
+      <a class="action" href="{{ url_for('directory.change_password', id=g.user['staff_id']) }}">Change Password</a>
     {% endif %}
+
   {% endif %}
 {% endblock %}
 
@@ -16,32 +22,35 @@
   <h3>Login details will be emailed to all staff members</h3>
   {% endif %}
   <div class="center">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th width="15%"> First Name </th>
-          <th width="15%"> Last Name </th>
-          <th width="15%"> Email </th>
-          <th width="15%"> Job Role </th>
-          <th width="15%"> Extension Number </th> 
-          <!-- <th width="15%"> Department </th>  -->
-        </tr>
-      </thead>
-      <tbody>
-      {% for staff_member in staff_members %}
-        <tr>
-          <td> {{ staff_member.first_name }} </td>
-          <td> {{ staff_member.last_name }} </td>
-          <td> {{ staff_member.email }} </td>
-          <td> {{ staff_member.job_role }} </td>
-          <td> {{ staff_member.extension_number }} </td>
-          <!-- {% if department %}
-            {% if staff_member['department_id'] == department['id']%}
-            <td> {{ department.department_name }} </td>
-            {% endif %}
-          {% endif %} -->
-        </tr> 
-      {% endfor %}
+    {% if g.user %}
+      <h1>Welcome to the Staff Directory {{g.user['first_name']}}</h1>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th width="15%"> First Name </th>
+            <th width="15%"> Last Name </th>
+            <th width="15%"> Email </th>
+            <th width="15%"> Job Role </th>
+            <th width="15%"> Extension Number </th> 
+            <!-- <th width="15%"> Department </th>  -->
+          </tr>
+        </thead>
+        <tbody>
+        {% for staff_member in staff_members %}
+          <tr>
+            <td> {{ staff_member.first_name }} </td>
+            <td> {{ staff_member.last_name }} </td>
+            <td> {{ staff_member.email }} </td>
+            <td> {{ staff_member.job_role }} </td>
+            <td> {{ staff_member.extension_number }} </td>
+            <!-- {% if department %}
+              {% if staff_member['department_id'] == department['id']%}
+              <td> {{ department.department_name }} </td>
+              {% endif %}
+            {% endif %} -->
+          </tr> 
+        {% endfor %}
+      {% endif %}
       </tbody>
     </table>
   </div>

@@ -1,6 +1,8 @@
 import os
 
 from flask import Flask
+from flask_session import Session
+ 
 
 
 def create_app(test_config=None):
@@ -25,6 +27,9 @@ def create_app(test_config=None):
         pass
     from . import db
     db.init_app(app)
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
     from . import auth
     app.register_blueprint(auth.bp)
     from . import directory
