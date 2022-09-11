@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS post;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT NOT NULL,
-  password TEXT NOT NULL, 
+  username CHAR(50) NOT NULL,
+  password CHAR(30) NOT NULL, 
   staff_id INTEGER NOT NULL,
   is_admin INTEGER NOT NULL,
   FOREIGN KEY (username) references staff_member (email),
@@ -16,13 +16,13 @@ CREATE TABLE user (
 
 CREATE TABLE staff_member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title TEXT NOT NULL,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
-  preferred TEXT NOT NULL,
-  job_role TEXT NOT NULL,
-  email TEXT NOT NULL,
-  extension_number VARCHAR (20), 
+  title CHAR (20) NOT NULL,
+  first_name CHAR (40) NOT NULL,
+  last_name VARCHAR NOT NULL,
+  preferred CHAR (50) NOT NULL,
+  job_role CHAR (30) NOT NULL,
+  email CHAR (40) NOT NULL,
+  extension_number CHAR (20), 
   system_administrator INTEGER NOT NULL,
   department_id INTEGER NOT NULL,
   FOREIGN KEY (department_id) REFERENCES department (id)
@@ -30,15 +30,15 @@ CREATE TABLE staff_member (
 
 CREATE TABLE department (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  department_name VARCHAR (20)
+  department_name CHAR (20)
 );
 
 CREATE TABLE post (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title VARCHAR (40) NOT NULL,
-  body TEXT,
-  created_by TEXT NOT NULL, 
-  department VARCHAR (20),
+  title CHAR (40) NOT NULL,
+  body TEXT NOT NULL,
+  created_by CHAR (40) NOT NULL, 
+  department CHAR (20),
   posted_on DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (created_by) REFERENCES user (username),
   FOREIGN KEY (department) REFERENCES department (department_name)
