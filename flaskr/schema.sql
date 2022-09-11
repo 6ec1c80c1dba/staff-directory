@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS staff_member;
 DROP TABLE IF EXISTS department;
-DROP TABLE IF EXISTS location;
+DROP TABLE IF EXISTS post;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,30 +30,28 @@ CREATE TABLE staff_member (
 
 CREATE TABLE department (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  department_name TEXT,
-  location_id TEXT,
-  FOREIGN KEY (id) REFERENCES locations (id)
+  department_name VARCHAR (20)
 );
 
-CREATE TABLE location (
+CREATE TABLE post (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  street_address VARCHAR (40),
-  postal_code VARCHAR (12) NOT NULL
+  title VARCHAR (40) NOT NULL,
+  body TEXT,
+  created_by TEXT NOT NULL, 
+  department VARCHAR (20),
+  posted_on DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES user (username),
+  FOREIGN KEY (department) REFERENCES department (department_name)
 );
 
 DELETE FROM user;
 
-INSERT INTO location (street_address, postal_code)
-VALUES
-('Oxford Street', 'W1D 1BS'),
-('Shoreditch High Street', 'E1 6JE'),
-('Soho Street', 'W1D 3AD');
 
-INSERT INTO department (department_name, location_id)
+INSERT INTO department (id, department_name)
 VALUES
-('Advertising', 1),
-('Recruitment', 2),
-('Marketing', 3);
+(1, 'Advertising'),
+(2, 'Recruitment'),
+(3, 'Marketing');
 
 INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)
 VALUES

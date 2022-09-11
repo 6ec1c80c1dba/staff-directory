@@ -7,26 +7,27 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
-bp = Blueprint('directory', __name__)
+bp = Blueprint('directory', __name__, url_prefix='/directory')
 
  
 
 @bp.route('/')
 def index():
     db = get_db()
+
     staff_members = db.execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, department_id, extension_number, username'
         ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
         ' ORDER BY s.id DESC'
     ).fetchall()
-    # department = get_db().execute(
-    #     'SELECT d.id, department_name, location_id'
-    #     ' FROM department d JOIN staff_member s ON d.id = s.department_id'
-    #     ' WHERE d.id = ?',
-    #         (id,)
-    # ).fetchone()
-    # Must add department to render template when functional
-    return render_template('directory/index.html', staff_members=staff_members)
+
+    department = db.execute(
+        'SELECT d.id, department_name'
+        ' FROM department d JOIN staff_member s ON d.id = s.department_id'
+    ).fetchone()
+
+    return render_template('directory/index.html',
+    staff_members=staff_members, department = department)
 
 def get_staff_member(staff_id, check_staff_member=True):
     staff_member = get_db().execute(
