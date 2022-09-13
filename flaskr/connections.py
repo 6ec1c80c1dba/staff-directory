@@ -9,6 +9,7 @@ from flaskr.db import get_db
 bp = Blueprint('connections', __name__, url_prefix='/connections')
 
 @bp.route('/')
+@login_required
 def index():
     """Returns all posts on the message board for Department"""
     db = get_db()
@@ -67,8 +68,12 @@ def create():
         if not title:
             error = 'Title is required.'
 
+        if not body:
+            error = 'Body is required.'
+
         if error is not None:
             flash(error)
+            
         else:
             db = get_db()
             db.execute(

@@ -12,12 +12,12 @@ bp = Blueprint('directory', __name__, url_prefix='/directory')
  
 
 @bp.route('/')
+@login_required
 def index():
     db = get_db()
-
     staff_members = db.execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, department_id, extension_number, username'
-        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' FROM staff_member s JOIN user u ON s.email = u.username'
         ' ORDER BY s.id DESC'
     ).fetchall()
 
@@ -32,7 +32,7 @@ def index():
 def get_staff_member(staff_id, check_staff_member=True):
     staff_member = get_db().execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, username'
-        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' FROM staff_member s JOIN user u ON s.emails = u.username'
         ' WHERE s.id = ?',
         (staff_id,)
     ).fetchone()
@@ -150,13 +150,11 @@ def delete():
             
     return render_template('directory/delete.html')
 
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route('/delete', methods=('POST',))
 @login_required
-def delete_user(id):
-    get_staff_member(id)
+def delete_user():
+    username = request.form['username']
     db = get_db()
-    db.execute('DELETE FROM staff_member WHERE id = ?', (id,))
+    db.execute('DELETE FROM staff_member WHERE email = ?', (username,))
     db.commit()
     return redirect(url_for('directory.index'))
-
-
