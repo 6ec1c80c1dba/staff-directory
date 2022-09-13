@@ -48,7 +48,7 @@
             <td> {{ staff_member.email }} </td>
             <td> {{ staff_member.job_role }} </td>
             <td> {{ staff_member.extension_number }} </td>
-            {% if department['id'] == staff_member['department_id'] %} 
+            {% if department['id'] == staff_member['in_department'] %} 
               <td> {{ department.department_name }} </td>
             {% endif %}
           </tr> 

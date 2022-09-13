@@ -9,21 +9,20 @@ from flaskr.db import get_db
 
 bp = Blueprint('directory', __name__, url_prefix='/directory')
 
- 
 
 @bp.route('/')
 @login_required
 def index():
     db = get_db()
     staff_members = db.execute(
-        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, department_id, extension_number, username'
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, in_department, extension_number, username'
         ' FROM staff_member s JOIN user u ON s.email = u.username'
         ' ORDER BY s.id DESC'
     ).fetchall()
 
     department = db.execute(
         'SELECT d.id, department_name'
-        ' FROM department d JOIN staff_member s ON d.id = s.department_id'
+        ' FROM department d JOIN staff_member s ON d.id = s.in_department'
     ).fetchone()
 
     return render_template('directory/index.html',
@@ -32,7 +31,7 @@ def index():
 def get_staff_member(staff_id, check_staff_member=True):
     staff_member = get_db().execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, username'
-        ' FROM staff_member s JOIN user u ON s.emails = u.username'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
         ' WHERE s.id = ?',
         (staff_id,)
     ).fetchone()
@@ -57,7 +56,7 @@ def create():
         email = request.form['email']
         extension_number = request.form['extension_number']
         system_administrator = request.form['system_administrator']
-        department_id = request.form['department_id']
+        in_department = request.form['department_id']
         error = None
 
         if not title:
@@ -68,9 +67,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)'
+                'INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)'
                 ' VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, department_id)
+                (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)
             )
             db.commit()
             return redirect(url_for('directory.index'))
