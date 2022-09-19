@@ -15,18 +15,17 @@ bp = Blueprint('directory', __name__, url_prefix='/directory')
 def index():
     db = get_db()
     staff_members = db.execute(
-        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, in_department, extension_number, username'
-        ' FROM staff_member s JOIN user u ON s.email = u.username'
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, in_department, extension_number'
+        ' FROM staff_member s '
         ' ORDER BY s.id DESC'
     ).fetchall()
 
     department = db.execute(
         'SELECT d.id, department_name'
-        ' FROM department d JOIN staff_member s ON d.id = s.in_department'
-    ).fetchone()
+        ' FROM department d'
+    ).fetchall()
 
-    return render_template('directory/index.html',
-    staff_members=staff_members, department = department)
+    return render_template('directory/index.html', staff_members=staff_members, department = department)
 
 def get_staff_member(staff_id, check_staff_member=True):
     staff_member = get_db().execute(
@@ -107,8 +106,9 @@ def update(id):
 def change_password(id):
     staff_member = get_staff_member(id)
     if request.method == 'POST':
-        password = request.form['password']
+        password = request.form['NewPassword']
         error = None
+        db = get_db()
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (staff_member['email'], )
         ).fetchone()
@@ -119,7 +119,6 @@ def change_password(id):
         if error is not None:
             flash(error)
         else:
-            db = get_db()
             db.execute(
                 'UPDATE user SET password = ?'
                 ' WHERE staff_id = ?',

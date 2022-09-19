@@ -24,7 +24,7 @@ CREATE TABLE staff_member (
   preferred CHAR (50) NOT NULL,
   job_role CHAR (30) NOT NULL,
   email CHAR (40) NOT NULL,
-  extension_number CHAR (20), 
+  extension_number CHAR (20) DEFAULT NULL, 
   system_administrator INTEGER NOT NULL,
   in_department INTEGER NOT NULL,
   FOREIGN KEY (in_department) REFERENCES department (id)
@@ -46,8 +46,6 @@ CREATE TABLE post (
   FOREIGN KEY (department_collection) REFERENCES department (id)
 );
 
-DELETE FROM user;
-
 
 INSERT INTO department (id, department_name)
 VALUES
@@ -58,16 +56,16 @@ VALUES
 INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)
 VALUES
   ("Mr", "Johnathon", "Dove", "John", 'Human Resources Administrator', 'johnathondove@mediacentral.com', 12652, 1, 2),
+  ("Miss", "Jasmin", "Powers", 'Jaz', 'Marketing Executive', 'jasminpowers@mediacentral.com', 66805, 0, 2),
   ("Mrs", "Sam", "Park", 'Sammie', 'Advertising Executive', 'sampark@mediacentral.com', 79513, 0, 1),
   ("Mr", "Stewart", "Thomas", "Stew", 'Marketing Advisor', 'stewartthomas@mediacentral.com', 87623, 0, 3),
   ("Miss", "Brenda", "Serrano", 'Brenda', 'Training and Development Advisor', 'sampark@mediacentral.com', 28367, 0, 2),
-  ("Mr", "Anthony", "Sharp", 'Tony', 'Advertising Manager', 'anthonysharp@mediacentral.com', 92945, 0, 1),
-  ("Miss", "Jasmin", "Powers", 'Jaz', 'Marketing Executive', 'jasminpowers@mediacentral.com', 66805, 0, 2);
+  ("Mr", "Anthony", "Sharp", 'Tony', 'Advertising Manager', 'anthonysharp@mediacentral.com', 92945, 0, 1);
 
 INSERT INTO user (username, password, staff_id, is_admin, department_id)
 VALUES
 ('johnathondove@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 1, 1, 2),
-('jasminpowers@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 6, 0, 2);
+('jasminpowers@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 2, 0, 2);
 
 
 

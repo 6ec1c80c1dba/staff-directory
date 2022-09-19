@@ -13,17 +13,15 @@ bp = Blueprint('connections', __name__, url_prefix='/connections')
 def index():
     """Returns all posts on the message board for Department"""
     db = get_db()
-    if g.user['is_admin'] == 0:
-        posts = db.execute(
-            'SELECT p.id, title, body, created_by, department_collection, posted_on'
-            ' FROM post p JOIN user u ON p.department_collection = u.department_id'
-        ).fetchall()
-    else:
-        posts = db.execute(
-            'SELECT p.id, title, body, created_by, department_collection, posted_on'
-            ' FROM post p'
-        ).fetchall()
-    return render_template('connections/index.html', posts=posts)
+    posts = db.execute(
+        'SELECT p.id, title, body, created_by, department_collection, posted_on'
+        ' FROM post p'
+    ).fetchall()
+    department = db.execute(
+        'SELECT d.id, department_name'
+        ' FROM department d JOIN post p ON d.id = p.department_collection'
+    ).fetchone()
+    return render_template('connections/index.html', posts=posts, department=department)
 
 def get_post(id, check_user=True):
     """Function to return all posts for a department"""
@@ -46,17 +44,17 @@ def get_post(id, check_user=True):
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    """Lets users make new posts to connections wall."""
+    """Lets users make new posts to connections"""
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
         error = None
 
         if not title:
-            error = 'Title is required.'
+            error = 'Please include a Title for your post.'
 
         if not body:
-            error = 'Body is required.'
+            error = 'Please include text for the body of your post.'
 
         if error is not None:
             flash(error)
@@ -76,6 +74,7 @@ def create():
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
+    """Users can update their posts."""
     post = get_post(id)
     if request.method == 'POST':
         title = request.form['title']
@@ -99,9 +98,10 @@ def update(id):
 
     return render_template('connections/update.html', post=post)
 
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route('/<int:id>/delete', methods=('GET','POST'))
 @login_required
 def delete(id):
+    """Users can delete their posts."""
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM post WHERE id = ?', (id,))

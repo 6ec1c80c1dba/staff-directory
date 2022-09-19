@@ -48,11 +48,18 @@
             <td> {{ staff_member.email }} </td>
             <td> {{ staff_member.job_role }} </td>
             <td> {{ staff_member.extension_number }} </td>
-            {% if department['id'] == staff_member['in_department'] %} 
-              <td> {{ department.department_name }} </td>
+            {% if staff_member['in_department'] == 1%} 
+              <td> Advertising </td>
+            {% endif %}
+            {% if staff_member['in_department'] == 2%} 
+              <td> Recruitment </td>
+            {% endif %}
+            {% if staff_member['in_department'] == 3%} 
+              <td> Marketing </td>
             {% endif %}
           </tr> 
         {% endfor %}
+
       {% endif %}
       </tbody>
     </table>
