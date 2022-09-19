@@ -1,10 +1,11 @@
 import os
+from sqlite3 import connect
 
 from flask import Flask
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    """Creation and configuration of the application."""
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -29,6 +30,10 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     from . import directory
     app.register_blueprint(directory.bp)
+    from . import connections
+    app.register_blueprint(connections.bp)
+    from . import home
+    app.register_blueprint(home.bp)
     app.add_url_rule('/', endpoint='index')
-
+    
     return app

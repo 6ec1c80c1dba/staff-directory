@@ -1,62 +1,62 @@
 import pytest
 from flaskr.db import get_db
-from werkzeug.security import check_password_hash, generate_password_hash
 
 
 def test_index(client, auth):
-    response = client.get('/directory/')
+    response = client.get('/connections/')
     assert response.headers["Location"] == "/auth/login"
     assert response.status_code == 302
 
     auth.login()
-    response = client.get('/directory/')
+    response = client.get('/connections/')
     assert b'Log Out' in response.data
+    assert b'Posts' in response.data
     assert b'Staff Directory' in response.data
-    assert b'Title' in response.data
-    assert b'Email' in response.data
+
 
 @pytest.mark.parametrize('path', (
-    '/directory/create',
-    '/directory/1/change_password',
-    '/directory/1/update/',
-    '/directory/delete'
+    '/connections/create',
+    '/connections/1/update',
+    '/connections/1/delete'
 ))
 def test_login_required(client, path):
     response = client.post(path)
     assert response.headers["Location"] == "/auth/login"
+    assert response.status_code == 302
 
 
 def test_staff_member_admin_access(app, client, auth):
-    """change a staff_members administrator acesses"""
+    """change post id"""
     with app.app_context():
         db = get_db()
-        db.execute('UPDATE staff_member SET system_administrator = 0 WHERE id = 2')
+        db.execute('UPDATE post SET id = 10 WHERE id = 2')
         db.commit()
 
     auth.login()
-    # current user is not an administrator so can't delete staff member
-    assert client.post('/directory/delete').status_code == 400
+    # current user is not an administrator so can't delete a post they did not create
+    assert client.post('/connections/1/delete').status_code == 403
     # current user cant see delete as an option
-    assert b'href="/directory/1/delete"' not in client.get('/directory/').data
+    assert b'href="/connections/1/delete"' in client.get('/connections/').data
 
 
 @pytest.mark.parametrize('path', (
-    '/directory/delete',
+    '/connections/1/delete',
 ))
 def test_exists_required(client, auth, path):
     auth.login()
-    assert client.post(path).status_code == 400
+    #Tests that a user cannot delete a post they did not create
+    assert client.post(path).status_code == 403
 
 def test_create(client, auth, app):
     auth.login()
-    assert client.get('/directory/create').status_code == 200
-    client.post('/directory/create', data={'title': 'miss', 'first_name':'Jane','surname': 'Doe', 'preferred': 'JD', 'job_role': 'administrative assistant', 'email': 'example@email.com', 'system_administrator': 0 , 'department_id': 1})
+    assert client.get('/connections/create').status_code == 200
+    # client.post('/connections/create', data={'title': 'My Title', 'body':'My Post Body','surname': 'Doe', 'preferred': 'JD', 'job_role': 'administrative assistant', 'email': 'example@email.com', 'system_administrator': 0 , 'department_id': 1})
 
-    with app.app_context():
-        db = get_db()
-        db.execute('DELETE FROM staff_member WHERE id != 1 and id !=2')
-        count = db.execute('SELECT COUNT(id) FROM staff_member').fetchone()[0]
-        assert count == 2
+#     with app.app_context():
+#         db = get_db()
+#         db.execute('DELETE FROM staff_member WHERE id != 1 and id !=2')
+#         count = db.execute('SELECT COUNT(id) FROM staff_member').fetchone()[0]
+#         assert count == 2
 
 # def test_update(client,auth,app):
 #     """Update functionality testing"""

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {% if g.user %}
+        <h1>{% block title %} Staff Management System {% endblock %}</h1>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>Hi {{ staff_member['preferred'] }} welcome to the Employee Management System.</h1>
+<h1>To see the staff directory please select the Staff Directory tab above</h1>
+<h1>To connect with colleagues from your department please select the tab above</h1>
+{% endblock %}
