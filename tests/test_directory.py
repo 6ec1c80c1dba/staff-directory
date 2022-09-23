@@ -1,4 +1,5 @@
 import pytest
+from flask import g
 from flaskr.db import get_db
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -49,6 +50,7 @@ def test_exists_required(client, auth, path):
 
 def test_create(client, auth, app):
     auth.login()
+    """Create a post"""
     assert client.get('/directory/create').status_code == 200
     client.post('/directory/create', data={'title': 'miss', 'first_name':'Jane','surname': 'Doe', 'preferred': 'JD', 'job_role': 'administrative assistant', 'email': 'example@email.com', 'system_administrator': 0 , 'department_id': 1})
 
@@ -59,9 +61,9 @@ def test_create(client, auth, app):
         assert count == 2
 
 # def test_update(client,auth,app):
-#     """Update functionality testing"""
+#     """Update a staff members record"""
 #     auth.login()
-#     assert client.get('/directory/2/update').status_code == 200
+#     assert client.get('/directory/12/update').status_code == 200
 #     client.post('/directory/1/update', data={'title': 'Mr', 'preferred': 'Tester'})
 #     with app.app_context():
 #         db = get_db()
@@ -70,30 +72,32 @@ def test_create(client, auth, app):
 
 # def test_change_password(client, auth, app):
 #     auth.login()
-#     assert client.get('/directory/2/update').status_code == 200
-#     client.post('/directory/2/update', data={'title': 'Mr', 'preferred': 'Tester'})
+#     password = generate_password_hash('Admin')
+#     # assert client.get('/directory/1/update').status_code == 200
+#     client.post('/directory/1/update', data={'password': password})
 
 #     with app.app_context():
 #         db = get_db()
-#         user = db.execute('SELECT * FROM user WHERE id = 2').fetchone()
+#         user = db.execute('SELECT * FROM user WHERE id = 1').fetchone()
 #         assert check_password_hash(user['password'], password) == True
 
 
-# @pytest.mark.parametrize('path', (
-#     '/directory/1/update',
-# ))
-# def test_update_validate(client, auth, path):
-#     auth.login()
-#     response = client.post(path, data={'title': '', 'preferred': ''})
-#     assert b'Title is required.' in response.data
+@pytest.mark.parametrize('path', (
+    '/directory/3/update',
+))
+def test_update_validate(client, auth, path):
+    auth.login()
+    response = client.post(path, data={'title': '', 'preferred': ''})
+    assert b'Title is required.' in response.data
 
-# def test_delete(client, auth, app):
-#     """"Admin can delete a user"""
-#     auth.login()
-#     response = client.post('directory/delete')
-#     assert response.status_code == 200
+def test_delete(client, auth, app):
+    """"Admin can delete a user"""
+    auth.login()
+    response = client.post('directory/delete')
+    assert response.status_code == 400
 
-#     with app.app_context():
-#         db = get_db()
-#         staff_member = db.execute('SELECT * FROM staff_member WHERE id = 1').fetchone()
-#         assert staff_member is None
+    with app.app_context():
+        db = get_db()
+        response = client.post('directory/delete')
+        staff_member = db.execute('SELECT * FROM staff_member WHERE email = "other"').fetchone()
+        assert staff_member is None

@@ -67,13 +67,13 @@ def test_update(client,auth,app):
         assert post['title'] == 'My New Title'
 
 
-def test_delete(client, auth, app):
-    """"User can delete a post they made"""
-    auth.login()
-    response = client.post('/connections/1/delete')
-    assert response.status_code == 200
+# def test_delete(client, auth, app):
+#     """"User can delete a post they made"""
+#     auth.login()
+#     response = client.post('/connections/1/delete')
+#     assert response.status_code == 200
 
-    with app.app_context():
-        db = get_db()
-        staff_member = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
-        assert staff_member is None
+#     with app.app_context():
+#         db = get_db()
+#         staff_member = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
+#         assert staff_member is None

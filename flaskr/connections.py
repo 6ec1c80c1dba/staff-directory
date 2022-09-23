@@ -32,7 +32,6 @@ def get_post(id, check_user=True):
         (id,)
     ).fetchone()
     
-
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")
 

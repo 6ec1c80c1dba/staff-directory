@@ -59,7 +59,7 @@ VALUES
   ("Miss", "Jasmin", "Powers", 'Jaz', 'Marketing Executive', 'jasminpowers@mediacentral.com', 66805, 0, 2),
   ("Mrs", "Sam", "Park", 'Sammie', 'Advertising Executive', 'sampark@mediacentral.com', 79513, 0, 1),
   ("Mr", "Stewart", "Thomas", "Stew", 'Marketing Advisor', 'stewartthomas@mediacentral.com', 87623, 0, 3),
-  ("Miss", "Brenda", "Serrano", 'Brenda', 'Training and Development Advisor', 'sampark@mediacentral.com', 28367, 0, 2),
+  ("Miss", "Brenda", "Serrano", 'Brenda', 'Training and Development Advisor', 'brendaserrano@mediacentral.com', 28367, 0, 2),
   ("Mr", "Anthony", "Sharp", 'Tony', 'Advertising Manager', 'anthonysharp@mediacentral.com', 92945, 0, 1);
 
 INSERT INTO user (username, password, staff_id, is_admin, department_id)
