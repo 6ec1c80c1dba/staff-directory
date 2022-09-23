@@ -10,7 +10,7 @@ def test_index(client, auth):
     auth.login()
     response = client.get('/connections/')
     assert b'Log Out' in response.data
-    assert b'Posts' in response.data
+    assert b'Connect' in response.data
     assert b'Staff Directory' in response.data
 
 
@@ -25,7 +25,7 @@ def test_login_required(client, path):
     assert response.status_code == 302
 
 
-def test_staff_member_admin_access(app, client, auth):
+def test_staff_member_admin_access(client, auth, app):
     """change post id"""
     with app.app_context():
         db = get_db()
@@ -33,67 +33,47 @@ def test_staff_member_admin_access(app, client, auth):
         db.commit()
 
     auth.login()
-    # current user is not an administrator so can't delete a post they did not create
-    assert client.post('/connections/1/delete').status_code == 403
-    # current user cant see delete as an option
+    # current user can see delete as an option for the post they made
     assert b'href="/connections/1/delete"' in client.get('/connections/').data
 
 
 @pytest.mark.parametrize('path', (
-    '/connections/1/delete',
+    '/connections/2/delete',
 ))
 def test_exists_required(client, auth, path):
     auth.login()
-    #Tests that a user cannot delete a post they did not create
-    assert client.post(path).status_code == 403
+    # Tests that a user cannot delete a post they did not create
+    assert client.post(path).status_code == 404
 
 def test_create(client, auth, app):
     auth.login()
     assert client.get('/connections/create').status_code == 200
-    # client.post('/connections/create', data={'title': 'My Title', 'body':'My Post Body','surname': 'Doe', 'preferred': 'JD', 'job_role': 'administrative assistant', 'email': 'example@email.com', 'system_administrator': 0 , 'department_id': 1})
+    client.post('/connections/create', data={'title': 'My Title', 'body':'My Post Body', 'created_by': 'other', 'department_collection': 2})
 
-#     with app.app_context():
-#         db = get_db()
-#         db.execute('DELETE FROM staff_member WHERE id != 1 and id !=2')
-#         count = db.execute('SELECT COUNT(id) FROM staff_member').fetchone()[0]
-#         assert count == 2
+    with app.app_context():
+        db = get_db()
+        db.execute('DELETE FROM post WHERE id = 2')
+        count = db.execute('SELECT COUNT(id) FROM post').fetchone()[0]
+        assert count == 1
 
-# def test_update(client,auth,app):
-#     """Update functionality testing"""
-#     auth.login()
-#     assert client.get('/directory/2/update').status_code == 200
-#     client.post('/directory/1/update', data={'title': 'Mr', 'preferred': 'Tester'})
-#     with app.app_context():
-#         db = get_db()
-#         staff_member = db.execute('SELECT * FROM staff_member WHERE id = 2').fetchone()
-#         assert staff_member['title'] == 'Mr'
+def test_update(client,auth,app):
+    """Update Post"""
+    auth.login()
+    assert client.get('/connections/1/update').status_code == 200
+    client.post('/connections/1/update', data={'title': 'My New Title', 'body': 'My updated post content'})
+    with app.app_context():
+        db = get_db()
+        post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
+        assert post['title'] == 'My New Title'
 
-# def test_change_password(client, auth, app):
-#     auth.login()
-#     assert client.get('/directory/2/update').status_code == 200
-#     client.post('/directory/2/update', data={'title': 'Mr', 'preferred': 'Tester'})
-
-#     with app.app_context():
-#         db = get_db()
-#         user = db.execute('SELECT * FROM user WHERE id = 2').fetchone()
-#         assert check_password_hash(user['password'], password) == True
-
-
-# @pytest.mark.parametrize('path', (
-#     '/directory/1/update',
-# ))
-# def test_update_validate(client, auth, path):
-#     auth.login()
-#     response = client.post(path, data={'title': '', 'preferred': ''})
-#     assert b'Title is required.' in response.data
 
 # def test_delete(client, auth, app):
-#     """"Admin can delete a user"""
+#     """"User can delete a post they made"""
 #     auth.login()
-#     response = client.post('directory/delete')
+#     response = client.post('/connections/1/delete')
 #     assert response.status_code == 200
 
 #     with app.app_context():
 #         db = get_db()
-#         staff_member = db.execute('SELECT * FROM staff_member WHERE id = 1').fetchone()
+#         staff_member = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
 #         assert staff_member is None

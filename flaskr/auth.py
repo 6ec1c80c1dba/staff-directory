@@ -106,7 +106,7 @@ def load_logged_in_user():
 def logout():
     """Logout the current user and remove all session data."""
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('auth.login'))
 
 def login_required(view):
     """A user must be logged in to not access the full application."""
@@ -118,5 +118,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
-

@@ -16,18 +16,16 @@
     <input name="preferred" id="preferred" value="{{ request.form['preferred'] }}" required>
     <label for="job_role">Job Role</label>
     <input name="job_role" id="job_role" value="{{ request.form['job_role'] }}" required>
-    <label for="email">Email Address</label>
-    <input name="email" id="email" value="{{ request.form['email'] }}" required>
     <label for="system_administrator"> System Administrator </label>
     <select name="system_administrator" id="system_administrator">
       <option value="0">No</option>
       <option value="1">Yes</option>
     </select>
     <label for="department_id"> Department </label>
-    <select name="department" id="department">
-      <option value="Advertising">Advertising</option>
-      <option value="Recruitment">Recruitment</option>
-      <option value="Marketing">Marketing</option>
+    <select name="department_id" id="department_id" value="{{ request.form['department_id'] }}">
+      <option id="department_id" value=1> Advertising</option>
+      <option id="department_id" value=2> Recruitment</option>
+      <option id="department_id" value=3> Marketing</option>
     </select>
     <input type="submit" value="Save">
   </form>
