@@ -10,12 +10,12 @@ Users can only register themselves on the app if they are a registered staff mem
 
 Users of the system can use a connections page to connect with colleagues from a range of different departments. Users can edit and delete the posts that they make and administrators of the app can delete any posts on the connection page.
 
+The source code for this application can also be cloned or downloaded from the following github repository: https://github.com/6ec1c80c1dba/staff-directory.
+
 The structure of this app was based on a tutorial found at:
 https://flask.palletsprojects.com/tutorial/
 
 ## Prerequist
-
-This code can also be cloned or downloaded from the following github repository: https://github.com/6ec1c80c1dba/staff-directory.
 
 To run this application you will need to follow the directions below to install the neccessary dependencies:
 
