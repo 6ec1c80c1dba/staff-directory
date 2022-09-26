@@ -5,23 +5,32 @@ from flask import (
 from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.db import get_db
+from flaskr.directory import get_staff_member
 
 bp = Blueprint('connections', __name__, url_prefix='/connections')
 
 @bp.route('/')
 @login_required
 def index():
-    """Returns all posts on the message board for Department"""
+    """Returns all posts on the message board"""
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, title, body, created_by, department_collection, posted_on'
-        ' FROM post p'
+        'SELECT p.id, title, body, created_by, department_collection, posted_on, username, staff_id '
+        ' FROM post p JOIN user u ON p.created_by = u.id'
+        ' ORDER BY posted_on ASC'
     ).fetchall()
     department = db.execute(
         'SELECT d.id, department_name'
         ' FROM department d JOIN post p ON d.id = p.department_collection'
     ).fetchone()
-    return render_template('connections/index.html', posts=posts, department=department)
+    current_staff_member = db.execute(
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, system_administrator'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' WHERE s.id = ?',
+        (g.user['staff_id'],)
+    ).fetchone()
+ 
+    return render_template('connections/index.html', posts=posts, department=department, current_staff_member = current_staff_member)
 
 def get_post(id, check_user=True):
     """Function to return all posts for a department"""
@@ -31,12 +40,18 @@ def get_post(id, check_user=True):
         ' WHERE p.id = ?',
         (id,)
     ).fetchone()
-    
+    staff_member = get_db().execute(
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, system_administrator'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' WHERE s.id = ?',
+        (g.user['staff_id'],)
+    ).fetchone()
     if post is None:
         abort(404, f"Post id {id} doesn't exist.")
 
-    if check_user and post['created_by'] != g.user['username']:
-        abort(403)
+    if post['created_by'] != g.user['id']:
+        if staff_member['system_administrator'] == 0:
+            abort(403)
 
     return post
 
@@ -63,7 +78,7 @@ def create():
             db.execute(
                 'INSERT INTO post (title, body, created_by, department_collection)'
                 ' VALUES (?, ?, ?, ?)',
-                (title, body, g.user['username'], g.user['department_id'])
+                (title, body, g.user['id'], g.user['department_id'])
             )
             db.commit()
             return redirect(url_for('connections.index'))
@@ -100,7 +115,7 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('GET','POST'))
 @login_required
 def delete(id):
-    """Users can delete their posts."""
+    """Users and admins can delete posts."""
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM post WHERE id = ?', (id,))

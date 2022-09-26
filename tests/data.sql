@@ -1,12 +1,15 @@
-INSERT INTO user (id, username, password, staff_id, is_admin, department_id)
+INSERT INTO user (id, username, password, staff_id, department_id)
 VALUES
-  (3, 'test', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', 12, 1, 2),
-  (4, 'other@mediacentral.com', 'pbkdf2:sha256:50000$kJPKsz6N$d2d4784f1b030a9761f5ccaeeaca413f27f2ecb76d6168407af962ddce849f79', 13, 1, 1);
+  (3, 'test', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', 12, 2),
+  (4, 'john@email.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 13, 1);
 
-INSERT INTO staff_member (title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)
+INSERT INTO staff_member (id, title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)
 VALUES
-  ("Mr", "Johnathon", "Doe", 'John', 'Human Resources Manager', 'john@email.com', 12345, 1, 2);
+  (12, "Miss", "Jane", "Doe", 'test', 'Team Lead', 'test', 25436, 1, 2),
+  (13, "Mr", "Johnathon", "Doe", 'John', 'Human Resources Manager', 'john@email.com', 12345, 1, 2);
 
-INSERT INTO post (id, title, body, created_by, department_collection, posted_on)
+
+INSERT INTO post ( title, body, created_by, department_collection, posted_on)
 VALUES 
-  (1, "Test Title", "My Test Body", 'test', 1, '2022-09-13 22:24:59');
+  ("Test Title", "My Test Body", 3, 2, '2022-09-13 22:24:59'),
+  ("My new post", "Contents of my post", 4, 1, '2022-09-24 20:30:00');

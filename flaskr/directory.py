@@ -10,24 +10,27 @@ import random, math
 
 bp = Blueprint('directory', __name__, url_prefix='/directory')
 
-
 @bp.route('/')
 @login_required
 def index():
     """Returns all staff members"""
     db = get_db()
+    my_staff_member = db.execute(
+        'SELECT s.id, title, first_name, last_name, preferred, job_role, email, system_administrator'
+        ' FROM staff_member s JOIN user u ON s.id = u.staff_id'
+        ' WHERE s.id = ?',
+        (g.user['staff_id'],)
+    ).fetchone()
     staff_members = db.execute(
         'SELECT s.id, title, first_name, last_name, preferred, job_role, email, in_department, extension_number'
         ' FROM staff_member s '
         ' ORDER BY s.first_name ASC'
     ).fetchall()
-
     department = db.execute(
         'SELECT d.id, department_name'
         ' FROM department d'
     ).fetchall()
-
-    return render_template('directory/index.html', staff_members=staff_members, department = department)
+    return render_template('directory/index.html', my_staff_member = my_staff_member,staff_members=staff_members, department = department)
 
 def get_staff_member(staff_id, check_staff_member=True):
     """Finds current staff member to support update user and staff member details"""
@@ -41,7 +44,7 @@ def get_staff_member(staff_id, check_staff_member=True):
     if staff_member is None:
         abort(404, f"Staff id {id} doesn't exist.")
 
-    if staff_member and staff_member['id'] != g.user['id']:
+    if staff_member and staff_member['id'] != g.user['staff_id']:
         abort(403)
 
     return staff_member
@@ -58,6 +61,7 @@ def generate_extension_number():
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    """"Renders form for admins to create new staff members details and insert them to the staff member table in the database"""
     if request.method == 'POST':
         title = request.form['title']
         first_name = request.form['first_name']
@@ -103,6 +107,7 @@ def create():
 @bp.route('/<int:id>/update/', methods=('GET', 'POST'))
 @login_required
 def update(id):
+    """"Renders form for user to update their staff member details and save changes to the staff member table in the database"""
     staff_member = get_staff_member(id)
     if request.method == 'POST':
         title = request.form['title']
@@ -129,13 +134,14 @@ def update(id):
 @bp.route('/<int:id>/change_password', methods=('GET', 'POST'))
 @login_required
 def change_password(id):
+    """"Renders form for user to update their login details and submit updates to the user table in the database"""
     staff_member = get_staff_member(id)
     if request.method == 'POST':
         password = request.form['NewPassword']
         error = None
         db = get_db()
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (staff_member['email'], )
+            'SELECT * FROM user WHERE staff_id = ?', (id, )
         ).fetchone()
         if not password:
             error = 'Please fill in the box below with your new password.'
@@ -156,6 +162,7 @@ def change_password(id):
 @bp.route('/delete', methods=('GET', 'POST'))
 @login_required
 def delete():
+    """"Renders form for admins to delete staff members details and remove them to the staff member and user table in the database."""
     if request.method == 'POST':
         username = request.form['username']
         error = None
@@ -168,16 +175,8 @@ def delete():
         else:
             db = get_db()
             db.execute('DELETE FROM staff_member WHERE email = ?', (username,))
+            db.execute('DELETE FROM user WHERE username = ?', (username,))
             db.commit()
             return redirect(url_for('directory.index'))
             
     return render_template('directory/delete.html')
-
-@bp.route('/delete', methods=('POST',))
-@login_required
-def delete_user():
-    username = request.form['username']
-    db = get_db()
-    db.execute('DELETE FROM staff_member WHERE email = ?', (username,))
-    db.commit()
-    return redirect(url_for('directory.index'))

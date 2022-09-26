@@ -4,9 +4,9 @@
   {% if g.user %}
     <h1>{% block title %} Staff Directory {% endblock %}</h1>
     {% if staff_members %}
-      {% if g.user['is_admin'] == 1 %}
-      <a class="action" href="{{ url_for('directory.create') }}">Add New User</a>
-      <a class="action" href="{{ url_for('directory.delete') }}">Delete User</a>
+      {% if my_staff_member['system_administrator'] == 1 %}
+      <a class="action" href="{{ url_for('directory.create') }}">Create New Staff Member</a>
+      <a class="action" href="{{ url_for('directory.delete') }}">Delete Staff Member</a>
       {% endif %}
       <a class="action" href="{{ url_for('directory.update',  id=g.user['staff_id']) }}">Update my details</a>
       <a class="action" href="{{ url_for('directory.change_password', id=g.user['staff_id']) }}">Change Password</a>

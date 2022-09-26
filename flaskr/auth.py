@@ -1,5 +1,5 @@
 import functools
-from xml.dom import InvalidAccessErr
+from tokenize import group
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, json
@@ -13,7 +13,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.errorhandler(HTTPException)
 def handle_exception(e):
-    """Return JSON instead of HTML for HTTP errors."""
+    """Return JSON format for improved readability in error logging instead of HTML for HTTP errors."""
     # start with the correct headers and status code from the error
     response = e.get_response()
     # replace the body with JSON
@@ -40,12 +40,15 @@ def register():
             try:
                 db = get_db()
                 staff_member = db.execute(
-                    'SELECT * FROM staff_member WHERE email = ?', (username, )
+                    'SELECT s.id, email, system_administrator, in_department'
+                    ' FROM staff_member s'
+                    ' WHERE email = "%s"'
+                    %(username)
                 ).fetchone()
                 if staff_member:
                     db.execute(
-                        "INSERT INTO user (username, password) VALUES (?, ?)",
-                        (username, generate_password_hash(password)),
+                        "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)",
+                        (username, generate_password_hash(password), int(staff_member['in_department']), int(staff_member['id'])),
                     )
                 db.commit()
             except db.IntegrityError:

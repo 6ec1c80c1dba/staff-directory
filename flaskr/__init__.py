@@ -3,7 +3,6 @@ from sqlite3 import connect
 
 from flask import Flask
 
-
 def create_app(test_config=None):
     """Creation and configuration of the application."""
     app = Flask(__name__, instance_relative_config=True)

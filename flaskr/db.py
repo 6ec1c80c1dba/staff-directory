@@ -5,6 +5,7 @@ from flask import current_app, g
 
 
 def get_db():
+    """"Configures database"""
     if 'db' not in g:
         g.db = sql.connect(
             current_app.config['DATABASE'],
@@ -16,6 +17,7 @@ def get_db():
 
 
 def close_db(e=None):
+    """"Closes database"""
     db = g.pop('db', None)
 
     if db is not None:
@@ -29,10 +31,11 @@ def init_db():
 
 @click.command('init-db')
 def init_db_command():
-    """Clear the existing data and create new tables."""
+    """Clear all data and create new tables from schema"""
     init_db()
     click.echo('Initialized the database.')
 
 def init_app(app):
+    """"Configures database within the context of the app"""
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
