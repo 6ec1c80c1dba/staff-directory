@@ -1,5 +1,5 @@
 # Staff Directory Application
-Line count: 1321 lines of code
+Line count: 1322 lines of code
 
 ## App Description
 
@@ -14,6 +14,8 @@ The structure of this app was based on a tutorial found at:
 https://flask.palletsprojects.com/tutorial/
 
 ## Prerequist
+
+This code can also be cloned or downloaded from the following github repository: https://github.com/6ec1c80c1dba/staff-directory.
 
 To run this application you will need to follow the directions below to install the neccessary dependencies:
 
