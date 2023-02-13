@@ -11,6 +11,7 @@ from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+
 @bp.errorhandler(HTTPException)
 def handle_exception(e):
     """Return JSON format for improved readability in error logging instead of HTML for HTTP errors."""
@@ -23,7 +24,8 @@ def handle_exception(e):
         "description": e.description,
     })
     response.content_type = "application/json"
-    response.set_cookie('username', 'flask', secure=True, httponly=True, samesite='Lax')
+    response.set_cookie('username', 'flask', secure=True,
+                        httponly=True, samesite='Lax')
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
     response.set_cookie('snakes', '3', max_age=600)
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -31,6 +33,7 @@ def handle_exception(e):
     response.headers['Content-Security-Policy'] = "default-src 'self'"
     response.set_cookie('snakes', '3', max_age=600)
     return response
+
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -50,12 +53,13 @@ def register():
                     'SELECT s.id, email, system_administrator, in_department'
                     ' FROM staff_member s'
                     ' WHERE email = "%s"'
-                    %(username)
+                    % (username)
                 ).fetchone()
                 if staff_member:
                     db.execute(
                         "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)",
-                        (username, generate_password_hash(password), int(staff_member['in_department']), int(staff_member['id'])),
+                        (username, generate_password_hash(password), int(
+                            staff_member['in_department']), int(staff_member['id'])),
                     )
                 db.commit()
             except db.IntegrityError:
@@ -67,6 +71,7 @@ def register():
 
         flash(error)
     return render_template('auth/register.html')
+
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
@@ -88,7 +93,6 @@ def login():
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
-
 
         if error is None:
             session.clear()
@@ -114,11 +118,13 @@ def load_logged_in_user():
             'SELECT * FROM user WHERE id = ?', (user_id,)
         ).fetchone()
 
+
 @bp.route('/logout')
 def logout():
     """Logout the current user and remove all session data."""
     session.clear()
     return redirect(url_for('auth.login'))
+
 
 def login_required(view):
     """A user must be logged in to not access the full application."""

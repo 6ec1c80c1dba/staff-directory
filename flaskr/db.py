@@ -23,17 +23,20 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+
 def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+
 @click.command('init-db')
 def init_db_command():
     """Clear all data and create new tables from schema"""
     init_db()
     click.echo('Initialized the database.')
+
 
 def init_app(app):
     """"Configures database within the context of the app"""

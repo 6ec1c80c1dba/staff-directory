@@ -3,6 +3,7 @@ from sqlite3 import connect
 
 from flask import Flask
 
+
 def create_app(test_config=None):
     """Creation and configuration of the application."""
     app = Flask(__name__, instance_relative_config=True)
@@ -38,5 +39,5 @@ def create_app(test_config=None):
     from . import home
     app.register_blueprint(home.bp)
     app.add_url_rule('/', endpoint='index')
-    
+
     return app

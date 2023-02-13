@@ -9,6 +9,7 @@ from flaskr.directory import get_staff_member
 
 bp = Blueprint('connections', __name__, url_prefix='/connections')
 
+
 @bp.route('/')
 @login_required
 def index():
@@ -29,8 +30,9 @@ def index():
         ' WHERE s.id = ?',
         (g.user['staff_id'],)
     ).fetchone()
- 
-    return render_template('connections/index.html', posts=posts, department=department, current_staff_member = current_staff_member)
+
+    return render_template('connections/index.html', posts=posts, department=department, current_staff_member=current_staff_member)
+
 
 def get_post(id, check_user=True):
     """Function to return all posts for a department"""
@@ -54,6 +56,7 @@ def get_post(id, check_user=True):
             abort(403)
 
     return post
+
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -85,6 +88,7 @@ def create():
 
     return render_template('connections/create.html')
 
+
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
@@ -112,7 +116,8 @@ def update(id):
 
     return render_template('connections/update.html', post=post)
 
-@bp.route('/<int:id>/delete', methods=('GET','POST'))
+
+@bp.route('/<int:id>/delete', methods=('GET', 'POST'))
 @login_required
 def delete(id):
     """Users and admins can delete posts."""

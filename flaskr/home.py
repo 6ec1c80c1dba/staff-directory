@@ -9,6 +9,7 @@ from flaskr.db import get_db
 
 bp = Blueprint('home', __name__)
 
+
 @bp.route('/')
 @login_required
 def index():
@@ -20,4 +21,4 @@ def index():
         ' WHERE s.id = ?',
         (g.user['staff_id'],)
     ).fetchone()
-    return render_template('index.html', current_staff_member = current_staff_member)
+    return render_template('index.html', current_staff_member=current_staff_member)
