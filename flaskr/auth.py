@@ -29,6 +29,7 @@ def handle_exception(e):
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Content-Security-Policy'] = "default-src 'self'"
+    response.set_cookie('snakes', '3', max_age=600)
     return response
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -71,10 +72,12 @@ def register():
 def login():
     """Function to take in user input and check against the database to enable the user to login."""
     if request.method == 'POST':
+        session.clear()
         username = request.form['username']
         session["username"] = request.form.get("username")
         session["name"] = "Testing"
         password = request.form['password']
+        session.permanent = True
         db = get_db()
         error = None
         user = db.execute(
