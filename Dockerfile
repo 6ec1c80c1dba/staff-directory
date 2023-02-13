@@ -12,8 +12,8 @@ RUN pip install --editable .
 RUN flask init-db
 
 # Unit tests
-# RUN pip install pytest && pytest
+RUN pip install pytest && pytest
 
 EXPOSE 5000
 
-CMD [ "flask", "run", "--host=0.0.0.0" ]
+CMD [ "flask", "run", "--host=0.0.0.0" "--cert", "adhoc"]

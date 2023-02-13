@@ -23,6 +23,12 @@ def handle_exception(e):
         "description": e.description,
     })
     response.content_type = "application/json"
+    response.set_cookie('username', 'flask', secure=True, httponly=True, samesite='Lax')
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.set_cookie('snakes', '3', max_age=600)
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
     return response
 
 @bp.route('/register', methods=('GET', 'POST'))
