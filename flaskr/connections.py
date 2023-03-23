@@ -9,7 +9,6 @@ from flaskr.directory import get_staff_member
 
 bp = Blueprint('connections', __name__, url_prefix='/connections')
 
-
 @bp.route('/')
 @login_required
 def index():

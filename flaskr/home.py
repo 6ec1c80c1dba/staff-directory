@@ -9,9 +9,9 @@ from flaskr.db import get_db
 
 bp = Blueprint('home', __name__)
 
-
 @bp.route('/')
 @login_required
+
 def index():
     """Renders the homepage for logged in users"""
     db = get_db()
