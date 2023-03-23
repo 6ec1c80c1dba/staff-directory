@@ -27,7 +27,6 @@ Flask-WTF==1.1.1
 -e git+https://github.com/6ec1c80c1dba/staff-directory.git@998f9fbaf4158a5bd15d45c3652ad901e60264ae#egg=flaskr
 greenlet==2.0.2
 idna==3.4
-immutabledict==2.2.3
 iniconfig==2.0.0
 install==1.3.5
 itsdangerous==2.1.2
