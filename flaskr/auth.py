@@ -6,6 +6,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
+import re
 from flask import current_app
 from flaskr.db import get_db
 
@@ -48,11 +49,17 @@ def register():
         if error is None:
             try:
                 db = get_db()
+                pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
+                valid = pattern.match(username)
+                if valid:
+                    email = username
+                else:
+                    error = f"User {username} is not valid."
                 staff_member = db.execute(
                     'SELECT s.id, email, system_administrator, in_department'
                     ' FROM staff_member s'
                     ' WHERE email = "%s"'
-                    % (username)
+                    % (email)
                 ).fetchone()
                 if staff_member:
                     db.execute(
@@ -82,10 +89,16 @@ def login():
         session["name"] = "Testing"
         password = request.form['password']
         session.permanent = True
+        pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
+        valid = pattern.match(username)
+        if valid:
+            email = username
+        else:
+            error = f"User {username} is not valid."
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username, )
+            'SELECT * FROM user WHERE username = ?', (email, )
         ).fetchone()
 
         if user is None:
