@@ -22,7 +22,7 @@ Flask-Migrate==4.0.4
 Flask-Principal==0.4.0
 Flask-SeaSurf==1.1.1
 Flask-SQLAlchemy==3.0.3
--e git+https://github.com/6ec1c80c1dba/staff-directory.git@a348ccfc76841b4f3d94d97c03688e217914ae24#egg=flask_talisman
+flask-talisman==1.0.0
 Flask-WTF==1.1.1
 -e git+https://github.com/6ec1c80c1dba/staff-directory.git@a348ccfc76841b4f3d94d97c03688e217914ae24#egg=flaskr
 greenlet==2.0.2
