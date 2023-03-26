@@ -45,7 +45,7 @@ class AuthActions(object):
         """Initialise the test suite"""
         self._client = client
 
-    def login(self, username='test', password='test'):
+    def login(self, username='test@email.com', password='test'):
         """Defines user to login with for auth"""
         return self._client.post(
             '/auth/login',
