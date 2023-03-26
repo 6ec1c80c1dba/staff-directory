@@ -4,7 +4,6 @@ from tokenize import group
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response
 )
-from sqlalchemy import text
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
