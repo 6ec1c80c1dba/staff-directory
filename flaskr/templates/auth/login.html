@@ -6,6 +6,11 @@
 
 {% block content %}
   <form method="post">
+    {% if testing== False %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    {% else %}
+      <label type="hidden" for="testing">Testing</label>
+    {% endif %}
     <label for="username">Username</label>
     <input name="username" id="username" required>
     <label for="password">Password</label>

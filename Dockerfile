@@ -9,9 +9,16 @@ WORKDIR /app
 
 RUN pip install --editable .
 
+RUN pip install flask-talisman
+
+RUN pip install flask-marshmallow
+
+RUN pip install flask-wtf
+
 RUN flask init-db
 
 # Unit tests
+
 # RUN pip install pytest && pytest
 
 EXPOSE 5000
