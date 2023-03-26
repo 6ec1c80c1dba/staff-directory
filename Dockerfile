@@ -11,6 +11,10 @@ RUN pip install --editable .
 
 RUN pip install flask-talisman
 
+
+RUN pip install --upgrade pip 
+RUN pip install flask SQLAlchemy
+
 RUN flask init-db
 
 # Unit tests
