@@ -9,6 +9,8 @@ WORKDIR /app
 
 RUN pip install --editable .
 
+RUN pip install flask-talisman
+
 RUN flask init-db
 
 # Unit tests
