@@ -13,6 +13,8 @@ RUN pip install flask-talisman
 
 RUN pip install flask-marshmallow
 
+RUN pip install flask-wtf
+
 RUN flask init-db
 
 # Unit tests
