@@ -55,11 +55,9 @@ def register():
                     email = text(username)
                 else:
                     error = f"User {username} is not valid."
+                textSQL = "SELECT s.id, email, system_administrator, in_department FROM staff_member s WHERE email = '%s'  % "
                 staff_member = db.execute(
-                    'SELECT s.id, email, system_administrator, in_department'
-                    ' FROM staff_member s'
-                    ' WHERE email = "%s"'
-                    % (email)
+                    textSQL,(email)
                 ).fetchone()
                 if staff_member:
                     textSQL = "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)"
