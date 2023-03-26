@@ -14,6 +14,7 @@ RUN pip install flask-talisman
 RUN flask init-db
 
 # Unit tests
+
 # RUN pip install pytest && pytest
 
 EXPOSE 5000
