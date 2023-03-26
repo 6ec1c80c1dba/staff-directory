@@ -7,4 +7,4 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 pycparser==2.21
 pyOpenSSL==23.0.0
-Werkzeug==2.2.2
+Werkzeug==2.2.3
