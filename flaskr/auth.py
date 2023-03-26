@@ -4,6 +4,7 @@ from tokenize import group
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response
 )
+from sqlalchemy import text
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
@@ -52,7 +53,7 @@ def register():
                 pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
                 valid = pattern.match(username)
                 if valid:
-                    email = username
+                    email = text(username)
                 else:
                     error = f"User {username} is not valid."
                 staff_member = db.execute(
@@ -62,8 +63,9 @@ def register():
                     % (email)
                 ).fetchone()
                 if staff_member:
+                    textSQL = "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)"
                     db.execute(
-                        "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)",
+                        textSQL,
                         (username, generate_password_hash(password), int(
                             staff_member['in_department']), int(staff_member['id'])),
                     )
@@ -97,8 +99,9 @@ def login():
             error = f"User {username} is not valid."
         db = get_db()
         error = None
+        textSQL = "SELECT * FROM user WHERE username = ?"
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (email, )
+            textSQL, (email,)
         ).fetchone()
 
         if user is None:
