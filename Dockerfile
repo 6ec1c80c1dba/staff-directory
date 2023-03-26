@@ -11,7 +11,7 @@ RUN pip install --editable .
 
 RUN pip install flask-talisman
 
-RUN pip install flask-sqlalchemy
+RUN pip install flask SQLAlchemy
 
 RUN flask init-db
 
