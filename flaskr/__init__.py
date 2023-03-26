@@ -3,7 +3,6 @@ from sqlite3 import connect
 
 from flask import Flask, Response
 from flask_talisman import Talisman
-from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_wtf.csrf import CSRFProtect, CSRFError
 
