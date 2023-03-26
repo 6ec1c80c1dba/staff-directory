@@ -52,7 +52,7 @@ def register():
                 pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
                 valid = pattern.match(username)
                 if valid:
-                    email = text(username)
+                    email = username
                 else:
                     error = f"User {username} is not valid."
                 textSQL = "SELECT s.id, email, system_administrator, in_department FROM staff_member s WHERE email = '%s'  % "
