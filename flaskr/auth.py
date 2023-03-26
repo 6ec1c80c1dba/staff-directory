@@ -6,11 +6,11 @@ from flask import (
 )
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from flask import current_app
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
+app = current_app
 @bp.errorhandler(HTTPException)
 def handle_exception(e):
     """Return JSON format for improved readability in error logging instead of HTML for HTTP errors."""
@@ -102,7 +102,7 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', testing=app.config['TESTING'])
 
 
 @bp.before_app_request

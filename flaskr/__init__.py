@@ -36,11 +36,15 @@ def create_app(test_config=None):
     app.jinja_env.autoescape = True
 
     Marshmallow(app)
-    CSRFProtect(app)
+    # Configure application to not use CSRF protection library when testing
+    if app.config['TESTING']:
+        pass
+    else:
+        CSRFProtect(app)
 
-    @app.errorhandler(CSRFError)
-    def handle_csrf_error(e):
-        return 'CSRF error - user forbidden', 403
+    # @app.errorhandler(CSRFError)
+    # def handle_csrf_error(e):
+    #     return 'CSRF error - user forbidden', 403
 
     from . import db
     db.init_app(app)
