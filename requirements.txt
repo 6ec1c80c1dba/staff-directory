@@ -24,7 +24,7 @@ Flask-Principal==0.4.0
 Flask-SeaSurf==1.1.1
 Flask-Security==3.0.0
 Flask-SQLAlchemy==3.0.3
--e git+https://github.com/6ec1c80c1dba/staff-directory.git@7ebbbd279904fb670fcd60f3309688d9d46be9f9#egg=flask_talisman
+flask-talisman==1.0.0
 Flask-WTF==1.1.1
 -e git+https://github.com/6ec1c80c1dba/staff-directory.git@7ebbbd279904fb670fcd60f3309688d9d46be9f9#egg=flaskr
 greenlet==2.0.2
