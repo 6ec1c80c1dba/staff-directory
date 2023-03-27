@@ -1,6 +1,6 @@
 INSERT INTO user (id, username, password, staff_id, department_id)
 VALUES
-  (3, 'test@email.com', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', 12, 2),
+  (3, 'test@email.com', 'pbkdf2:sha256:260000$B8lEWeATJq02kTWY$44e55a66b4deb91768bdbd42a4a1b226f77358956f9b1b58af7320db1a1a5ca6', 12, 2),
   (4, 'john@email.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 13, 1);
 
 INSERT INTO staff_member (id, title, first_name, last_name, preferred, job_role, email, extension_number, system_administrator, in_department)
