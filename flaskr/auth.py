@@ -2,12 +2,12 @@ import functools
 from tokenize import group
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response, current_app
 )
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
-from flask import current_app
+
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -34,7 +34,6 @@ def handle_exception(e):
     response.set_cookie('snakes', '3', max_age=600)
     return response
 
-
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     """Allow a new user to register for an acount."""
@@ -55,9 +54,9 @@ def register():
                     email = username
                 else:
                     error = f"User {username} is not valid."
-                textSQL = "SELECT s.id, email, system_administrator, in_department FROM staff_member s WHERE email = '%s'  % "
+                textSQL = "SELECT s.id, email, system_administrator, in_department FROM staff_member s WHERE email = ?"
                 staff_member = db.execute(
-                    textSQL,(email)
+                    textSQL, (email,)
                 ).fetchone()
                 if staff_member:
                     textSQL = "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)"
