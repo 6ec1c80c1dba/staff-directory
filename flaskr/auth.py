@@ -2,11 +2,12 @@ import functools
 from tokenize import group
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, json, Response, current_app
 )
 from werkzeug.exceptions import abort, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import current_app
+import re
+
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -33,7 +34,6 @@ def handle_exception(e):
     response.set_cookie('snakes', '3', max_age=600)
     return response
 
-
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     """Allow a new user to register for an acount."""
@@ -48,15 +48,20 @@ def register():
         if error is None:
             try:
                 db = get_db()
+                pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
+                valid = pattern.match(username)
+                if valid:
+                    email = username
+                else:
+                    error = f"User {username} is not valid."
+                textSQL = "SELECT s.id, email, system_administrator, in_department FROM staff_member s WHERE email = ?"
                 staff_member = db.execute(
-                    'SELECT s.id, email, system_administrator, in_department'
-                    ' FROM staff_member s'
-                    ' WHERE email = "%s"'
-                    % (username)
+                    textSQL, (email,)
                 ).fetchone()
                 if staff_member:
+                    textSQL = "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)"
                     db.execute(
-                        "INSERT INTO user (username, password, department_id, staff_id ) VALUES (?, ?, ?, ?)",
+                        textSQL,
                         (username, generate_password_hash(password), int(
                             staff_member['in_department']), int(staff_member['id'])),
                     )
@@ -82,10 +87,17 @@ def login():
         session["name"] = "Testing"
         password = request.form['password']
         session.permanent = True
+        pattern = re.compile("^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
+        valid = pattern.match(username)
+        if valid:
+            email = username
+        else:
+            error = f"User {username} is not valid."
         db = get_db()
         error = None
+        textSQL = "SELECT * FROM user WHERE username = ?"
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username, )
+            textSQL, (email,)
         ).fetchone()
 
         if user is None:

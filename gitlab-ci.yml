@@ -10,10 +10,8 @@ include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
 
-stages:
-  - unit-tests
 
 custom job:
-  stage: unit-tests
+  stage: test
   script:
     - python -m pytest

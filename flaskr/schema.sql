@@ -61,7 +61,7 @@ VALUES
 
 INSERT INTO user (username, password, staff_id, department_id)
 VALUES
-('johnathondove@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 1, 2),
+('johnathondove@mediacentral.com', 'pbkdf2:sha256:260000$B8lEWeATJq02kTWY$44e55a66b4deb91768bdbd42a4a1b226f77358956f9b1b58af7320db1a1a5ca6', 1, 2),
 ('jasminpowers@mediacentral.com', 'pbkdf2:sha256:260000$SIrUaDlbHO4ONj1A$a3e63528815b537a9f75fc7394a8ecf6cbf2578570d89ceafd9d5c1d3cee2b20', 2, 2);
 
 INSERT INTO post (title, body, created_by, department_collection, posted_on)
