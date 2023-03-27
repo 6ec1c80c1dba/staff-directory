@@ -8,8 +8,8 @@ from flaskr.db import get_db
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('', 'admin', b'Username is required.'),
-    ('test', '', b'Password is required.'),
-    ('test@email.com', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', b'login')
+    ('test@email.com', '', b'Password is required.'),
+    ('test@email.com', 'pbkdf2:sha256:260000$7UP24afAvoN1t6cg$de194a8723567cddf44314fc82d3585dac2b530ec2ec62047547ad6c1504669e', b'login')
 ))
 def test_register_validate_input(app, client, username, password, message):
     """Testing user reigstration functionality"""
@@ -39,7 +39,7 @@ def test_login(client, auth):
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('a@email.com', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', b'Incorrect username.'),
     ('john@email.com', 'a', b'Incorrect password.'),
-    ('test@email.com', 'pbkdf2:sha256:50000$TCI4GzcX$0de171a4f4dac32e3364c7ddc7c14f3e2fa61f2d17574483f7ffbb431b4acb2f', b'login')
+    ('test@email.com', 'pbkdf2:sha256:260000$7UP24afAvoN1t6cg$de194a8723567cddf44314fc82d3585dac2b530ec2ec62047547ad6c1504669e', b'login')
 ))
 
 def test_login_validate_input(auth, username, password, message):

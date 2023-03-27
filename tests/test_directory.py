@@ -59,7 +59,7 @@ def test_create(client, auth, app):
 def test_update(client,auth,app):
     """Update a staff members record"""
     auth.login()
-    client.post('/directory/13/update', data={'title': 'Mr', 'preferred': 'Jon'})
+    client.post('/directory/12/update', data={'title': 'Mr', 'preferred': 'Jon'})
     with app.app_context():
         db = get_db()
         staff_member = db.execute('SELECT * FROM staff_member WHERE id = 13').fetchone()
@@ -67,7 +67,7 @@ def test_update(client,auth,app):
 
 def test_change_password(client, auth, app):
     auth.login()
-    password = generate_password_hash('Admin')
+    password = generate_password_hash('78gvgcfdxszfdgc')
     client.post('/directory/12/update', data={'password': password})
 
 
