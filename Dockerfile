@@ -17,6 +17,8 @@ RUN pip install flask-wtf
 
 RUN flask init-db
 
+ENV FLASK_ENV=testing
+
 ENV TESTING=True
 
 RUN pip install pytest
