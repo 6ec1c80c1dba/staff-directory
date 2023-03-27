@@ -15,9 +15,3 @@ custom job:
   stage: test
   script:
     - python -m pytest
-
-custom job:
-  stage: test
-  runs-on: ubuntu-latest
-  script:
-    - docker build . --file pipenv.Dockerfile --tag my-image-name:$(date +%s
