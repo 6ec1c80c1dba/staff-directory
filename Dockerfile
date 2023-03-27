@@ -17,6 +17,12 @@ RUN pip install flask-wtf
 
 RUN flask init-db
 
+ENV TESTING=True
+
+RUN pip install pytest
+
+ENV TESTING=False
+
 EXPOSE 5000
 
 CMD [ "flask", "run", "--host=0.0.0.0" "--cert", "adhoc"]
