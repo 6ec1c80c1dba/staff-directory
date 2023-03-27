@@ -21,4 +21,5 @@ jobs:
           with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
+      script:
         - pipenv run pytest tests/
