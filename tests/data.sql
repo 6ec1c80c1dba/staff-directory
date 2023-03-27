@@ -8,7 +8,6 @@ VALUES
   (12, "Miss", "Jane", "Doe", 'test', 'Team Lead', 'test', 25436, 1, 2),
   (13, "Mr", "Johnathon", "Doe", 'John', 'Human Resources Manager', 'john@email.com', 12345, 1, 2);
 
-
 INSERT INTO post ( title, body, created_by, department_collection, posted_on)
 VALUES 
   ("Test Title", "My Test Body", 3, 2, '2022-09-13 22:24:59'),
