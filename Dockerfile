@@ -21,6 +21,8 @@ ENV TESTING=True
 
 RUN pip install pytest
 
+RUN pytest
+
 ENV TESTING=False
 
 EXPOSE 5000
