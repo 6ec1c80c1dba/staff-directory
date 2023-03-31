@@ -48,8 +48,24 @@ def create_app(test_config=None):
     if app.config['TESTING']:
         app.register_blueprint(auth.bp)
     else:
-        csrf = CSRFProtect(app)
-        app.register_blueprint(csrf.exempt(auth.bp))
+        # Disable pre-request CSRF
+        app.config['WTF_CSRF_CHECK_DEFAULT'] = False
+
+        # Check csrf for session and http auth (but not token)
+        app.config['SECURITY_CSRF_PROTECT_MECHANISMS'] = ["session", "basic"]
+
+        # Enable CSRF protection
+        csrf = CSRFProtect()
+        csrf.init_app(app)
+        app.config["SECURITY_CSRF_COOKIE_NAME"] = "XSRF-TOKEN"
+
+        # Don't have csrf tokens expire (they are invalid after logout)
+        app.config["WTF_CSRF_TIME_LIMIT"] = None
+
+        # You can't get the cookie until you are logged in.
+        app.config["SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS"] = True
+        # app.register_blueprint(csrf.exempt(auth.bp))
+        app.register_blueprint(auth.bp)
 
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
