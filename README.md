@@ -1,5 +1,5 @@
 # Staff Directory Application
-Line count: 1322 lines of code
+Line count: 1500 lines of code
 
 ## App Description
 

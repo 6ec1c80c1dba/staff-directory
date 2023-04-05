@@ -17,9 +17,17 @@ RUN pip install flask-wtf
 
 RUN flask init-db
 
-# Unit tests
+ENV FLASK_ENV=testing
 
-# RUN pip install pytest && pytest
+ENV TESTING=True
+
+RUN pip install pytest
+
+RUN pytest
+
+ENV TESTING=False
+
+ENV FLASK_ENV=development
 
 EXPOSE 5000
 
